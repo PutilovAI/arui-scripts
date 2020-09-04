@@ -236,13 +236,15 @@ module.exports = applyOverrides(['webpack', 'webpackClient', 'webpackDev', 'webp
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
-    node: {
-        dgram: 'empty',
-        fs: 'empty',
-        net: 'empty',
-        tls: 'empty',
-        child_process: 'empty',
-    },
+    // node: {
+    //     global: {
+    //         dgram: false,
+    //         fs: false,
+    //         net: false,
+    //         tls: false,
+    //         child_process: false,
+    //     }
+    // },
     // Turn off performance hints during development because we don't do any
     // splitting or minification in interest of speed. These warnings become
     // cumbersome.

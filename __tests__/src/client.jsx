@@ -6,6 +6,7 @@ import { App } from './app';
 const targetElement = document.getElementById('app');
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
+    console.log(module.hot);
     ReactDOM.render(
         <AppContainer>
             <App />
