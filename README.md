@@ -38,6 +38,7 @@ npm install arui-scripts --save-dev
 - `arui-scripts docker-build` - собирает docker контейнер c production билдом и загружает его в артифактори
 - `arui-scripts test` - запускает jest тесты.
 - `arui-scripts archive-build` - собирает архив с production билдом
+- `arui-scripts bundle-analyze` - запускает [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer) для prod версии клиентского кода
 
 
 Настройки
@@ -62,7 +63,7 @@ npm install arui-scripts --save-dev
 - `keepPropTypes` - если `true`, пакеты с prop-types не будут удалены из production билда.
 - `debug` - режим отладки, в котором не выполняются некоторые нежелательные операции и выводится больше сообщений об ошибках, по умолчанию `false`.
 - `useTscLoader` -  использовать ts-loader вместо babel-loader для обработки ts файлов. У babel-loader есть [ряд ограничений](https://blogs.msdn.microsoft.com/typescript/2018/08/27/typescript-and-babel-7/). По умолчанию `false`.
-- `сomponentsTheme` - путь к css файлу с темой для [core-components](https://alfa-laboratory.github.io/core-components). Используется для настройки [postcss-custom-properties](https://github.com/alfa-laboratory/postcss-custom-properties#importfrom).
+- `componentsTheme` - путь к css файлу с темой для [core-components](https://alfa-laboratory.github.io/core-components). Используется для настройки [postcss-custom-properties](https://github.com/alfa-laboratory/postcss-custom-properties#importfrom).
 
 В целях отладки все эти настройки можно переопределить не изменяя package.json
 Просто передайте необходимые настройки в environment переменной ARUI_SCRIPTS_CONFIG
@@ -72,6 +73,22 @@ ARUI_SCRIPTS_CONFIG="{\"serverPort\":3333}" yarn start
 
 Так же, читаются настройки jest (см. [документацию](https://facebook.github.io/jest/docs/en/configuration.html))
 и `proxy` (см. [документацию](https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/template/README.md#proxying-api-requests-in-development)).
+
+Несколько entry point
+---
+Ключи `serverEntry` и `clientEntry` принимают не только строки, но и любые возможные в [webpack варианты](https://webpack.js.org/concepts/entry-points/).
+Например, package.json:
+```json
+{
+    "aruiScripts": {
+        "clientEntry": { "mobile": "src/mobile/", "desktop": "src/desktop/" },
+        "serverEntry": ["src/server-prepare", "src/server"]
+    }
+}
+```
+
+Ко всем клиентским entryPoint так же будут добавлены `clientPolyfillsEntry` (если задан)
+и, в dev режиме, необходимые для hot-module-reload файлы.
 
 Переопределение настроек компиляторов
 ---
@@ -437,5 +454,6 @@ module.exports = {
 - `webpack.client.prod` - конфигурация для клиентского webpack в prod режиме. Ключи: `webpack`, `webpackClient`, `webpackProd`, `webpackClientProd`.
 - `webpack.server.dev` - конфигурация для серверного webpack в dev режиме. Ключи: `webpack`, `webpackServer`, `webpackDev`, `webpackServerDev`.
 - `webpack.server.prod` - конфигурация для серверного webpack в prod режиме. Ключи: `webpack`, `webpackServer`, `webpackProd`, `webpackServerProd`.
+- `supporting-browsers` - список поддерживаемых браузеров в формате [browserslist](https://github.com/browserslist/browserslist). Ключи: `browsers`, `supportingBrowsers`
 
 Для некоторых конфигураций определены несколько ключей, они будут применяться в том порядке, в котором они приведены в этом файле.

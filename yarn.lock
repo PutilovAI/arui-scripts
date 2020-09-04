@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@alfalab/postcss-custom-properties@^9.1.1":
-  version "9.1.1"
-  resolved "https://registry.yarnpkg.com/@alfalab/postcss-custom-properties/-/postcss-custom-properties-9.1.1.tgz#87bf16543d63d9f15c3a0bdf843bac71dfab3971"
-  integrity sha512-B4dL0AfRB2Syyf/1T0hKZPglObRo+sK3bltwaL08+NreXZm2E03MFpiNYG/3cEtnds3DScfDqBkG0VA5b2I9RQ==
+"@alfalab/postcss-custom-properties@^9.1.2":
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/@alfalab/postcss-custom-properties/-/postcss-custom-properties-9.1.2.tgz#1eeb1c2f3820ef4ff84fec13deb08baf71161210"
+  integrity sha512-eKx+09pGoZZJ1lnRwIepvFcWj4i2uFNIdv72OJ0VaLn1GDgKfe7vKYNHD4Cd5LLr6LN6eaygTJ2vDlMxtxKSPA==
   dependencies:
     postcss "^7.0.17"
     postcss-values-parser "^3.0.5"
@@ -2481,6 +2481,13 @@ braces@^3.0.1:
   dependencies:
     fill-range "^7.0.1"
 
+brotli-size@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/brotli-size/-/brotli-size-4.0.0.tgz#a05ee3faad3c0e700a2f2da826ba6b4d76e69e5e"
+  integrity sha512-uA9fOtlTRC0iqKfzff1W34DXUA3GyVqbUaeo3Rw3d4gd1eavKVCETXrn3NzO74W+UVkG3UHu8WxUi+XvKI/huA==
+  dependencies:
+    duplexer "0.1.1"
+
 browser-process-hrtime@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
@@ -3902,7 +3909,7 @@ dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
-duplexer@^0.1.1:
+duplexer@0.1.1, duplexer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
   integrity sha1-rOb/gIwc5mtX0ev5eXessCM0z8E=
@@ -11018,8 +11025,8 @@ websocket-driver@>=0.5.1:
 
 websocket-extensions@>=0.1.1:
   version "0.1.4"
-  resolved "http://binary:80/artifactory/api/npm/npm/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
-  integrity sha1-f4RzvIOd/YdgituV1+sHUhFXikI=
+  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
+  integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3:
   version "1.0.5"
