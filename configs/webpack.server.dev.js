@@ -58,7 +58,7 @@ const config = {
                 .replace(/\\/g, '/'),
     },
     externals: [nodeExternals({
-        whitelist: [
+        allowlist: [
             /^arui-feather/,
             /^arui-ft-private/,
             /^arui-private/,

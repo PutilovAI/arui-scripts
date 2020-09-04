@@ -50,7 +50,7 @@
 
 ### Features
 
-* add newclick-composite-components to whitelist ([ff6c1f8](https://github.com/alfa-laboratory/arui-scripts/commit/ff6c1f8))
+* add newclick-composite-components to allowlist ([ff6c1f8](https://github.com/alfa-laboratory/arui-scripts/commit/ff6c1f8))
 
 
 
