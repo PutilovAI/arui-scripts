@@ -4,9 +4,6 @@ const configs = require('./app-configs');
 const extensions = ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx', '.ts', '.tsx'];
 
 module.exports = {
-    alias: {
-        'react-dom': '@hot-loader/react-dom',
-    },
     // This allows you to set a fallback for where Webpack should look for modules.
     // We placed these paths second because we want `node_modules` to "win"
     // if there are any conflicts. This matches Node resolution mechanism.

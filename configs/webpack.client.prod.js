@@ -237,7 +237,7 @@ module.exports = applyOverrides(['webpack', 'webpackClient', 'webpackProd', 'web
                                     importLoaders: 1,
                                     modules: true,
                                     sourceMap: false,
-                                    getLocalIdent: getCSSModuleLocalIdent
+                                    // getLocalIdent: getCSSModuleLocalIdent
                                 },
                             },
                             {

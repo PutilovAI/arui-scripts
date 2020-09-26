@@ -179,7 +179,7 @@ module.exports = applyOverrides(['webpack', 'webpackClient', 'webpackDev', 'webp
                                 options: {
                                     importLoaders: 1,
                                     modules: true,
-                                    getLocalIdent: getCSSModuleLocalIdent
+                                    // getLocalIdent: getCSSModuleLocalIdent
                                 },
                             },
                             {

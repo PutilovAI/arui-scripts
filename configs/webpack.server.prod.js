@@ -30,7 +30,7 @@ module.exports = applyOverrides(['webpack', 'webpackServer', 'webpackProd', 'web
     // Don't attempt to continue if there are any errors.
     bail: true,
     // We generate sourcemaps in production. This is slow but gives good results.
-    devtool: 'source-map',
+    // devtool: 'source-map',
     target: 'node',
     node: {
         __filename: true,

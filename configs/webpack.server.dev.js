@@ -3,8 +3,6 @@ const fs = require('fs');
 const webpack = require('webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const StartServerPlugin = require('start-server-webpack-plugin');
-const ReloadServerPlugin = require('reload-server-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -146,7 +144,7 @@ const config = {
                                 options: {
                                     modules: true,
                                     exportOnlyLocals: true,
-                                    getLocalIdent: getCSSModuleLocalIdent
+                                    // getLocalIdent: getCSSModuleLocalIdent
                                 },
                             },
                             {
@@ -183,9 +181,7 @@ const config = {
         ],
     },
     plugins: [
-        configs.useServerHMR
-            ? new StartServerPlugin(configs.serverOutput)
-            : new ReloadServerPlugin({ script: path.join(configs.serverOutputPath, configs.serverOutput) }),
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.BannerPlugin({
             banner: assetsIgnoreBanner,
