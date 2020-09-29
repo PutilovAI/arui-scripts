@@ -1,6 +1,6 @@
 {
-  "name": "arui-scripts",
-  "version": "9.5.0",
+  "name": "@doyakovlev/arui-scripts",
+  "version": "10.0.0-beta.1",
   "main": "index.js",
   "license": "MPL-2.0",
   "repository": {
