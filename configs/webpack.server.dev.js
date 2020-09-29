@@ -3,8 +3,6 @@ const fs = require('fs');
 const webpack = require('webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const StartServerPlugin = require('start-server-webpack-plugin');
-const ReloadServerPlugin = require('reload-server-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -15,11 +13,17 @@ const configs = require('./app-configs');
 const babelConf = require('./babel-server');
 const postcssConf = require('./postcss');
 const applyOverrides = require('./util/apply-overrides');
+const getEntry = require('./util/get-entry');
+
 const assetsIgnoreBanner = fs.readFileSync(require.resolve('./util/node-assets-ignore'), 'utf8');
 
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
+
+function getSingleEntry(entryPoint) {
+    return [...entryPoint];
+}
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -33,16 +37,7 @@ const config = {
         __filename: true,
         __dirname: true
     },
-    // These are the "entry points" to our application.
-    // This means they will be the "root" imports that are included in JS bundle.
-    // The first two entry points enable "hot" CSS and auto-refreshes for JS.
-    entry: [
-        // Finally, this is your app's code:
-        configs.serverEntry,
-        // We include the app code last so that if there is a runtime error during
-        // initialization, it doesn't blow up the WebpackDevServer client, and
-        // changing JS code would still trigger a refresh.
-    ],
+    entry: getEntry(configs.serverEntry, getSingleEntry),
     context: configs.cwd,
     output: {
         // Add /* filename */ comments to generated require()s in the output.
@@ -149,7 +144,7 @@ const config = {
                                 options: {
                                     modules: true,
                                     exportOnlyLocals: true,
-                                    getLocalIdent: getCSSModuleLocalIdent
+                                    // getLocalIdent: getCSSModuleLocalIdent
                                 },
                             },
                             {
@@ -186,9 +181,7 @@ const config = {
         ],
     },
     plugins: [
-        configs.useServerHMR
-            ? new StartServerPlugin(configs.serverOutput)
-            : new ReloadServerPlugin({ script: path.join(configs.serverOutputPath, configs.serverOutput) }),
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.BannerPlugin({
             banner: assetsIgnoreBanner,
@@ -203,7 +196,6 @@ const config = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         }),
-        new webpack.NamedModulesPlugin(),
         // Watcher doesn't work well if you mistype casing in a path so we use
         // a plugin that prints an error when you attempt to do this.
         // See https://github.com/facebookincubator/create-react-app/issues/240

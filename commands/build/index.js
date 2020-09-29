@@ -23,7 +23,8 @@ if (fs.pathExistsSync(configs.serverOutputPath)) {
 const compileServer = spawn('node', [path.join(__dirname, './server')], { stdio: 'inherit' });
 const compileClient = spawn('node', [path.join(__dirname, './client')], { stdio: 'inherit' });
 
-const onProcessExit = (code) => {
+const onProcessExit = (code, ...ards) => {
+    console.log('code', ards);
     if (code !== 0) {
         compileServer.kill();
         compileClient.kill();

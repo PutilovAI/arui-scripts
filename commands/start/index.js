@@ -3,6 +3,7 @@ process.env.BROWSERSLIST_CONFIG = process.env.BROWSERSLIST_CONFIG || require.res
 const fs = require('fs-extra');
 const webpack = require('webpack');
 const chalk = require('chalk');
+const { spawn } = require('child_process');
 const WebpackDevServer = require('webpack-dev-server');
 const { choosePort } = require('react-dev-utils/WebpackDevServerUtils');
 const checkRequiredFiles = require('../util/check-required-files');
@@ -16,12 +17,12 @@ const clientCompiler = webpack(clientConfig);
 const serverCompiler = webpack(serverConfig);
 const clientDevServer = new WebpackDevServer(clientCompiler, devServerConfig);
 
-serverCompiler.plugin('compile', () => console.log('Compiling server...'));
-serverCompiler.plugin('invalid', () => console.log('Compiling server...'));
-serverCompiler.plugin('done', (stats) => printCompilerOutput('Server', stats));
+// serverCompiler.plugin('compile', () => console.log('Compiling server...'));
+// serverCompiler.plugin('invalid', () => console.log('Compiling server...'));
+// serverCompiler.plugin('done', (stats) => printCompilerOutput('Server', stats));
 
-clientCompiler.plugin('invalid', () => console.log('Compiling client...'));
-clientCompiler.plugin('done', (stats) => printCompilerOutput('Client', stats));
+// clientCompiler.plugin('invalid', () => console.log('Compiling client...'));
+// clientCompiler.plugin('done', (stats) => printCompilerOutput('Client', stats));
 
 
 const DEFAULT_PORT = devServerConfig.port;
@@ -35,6 +36,7 @@ if (fs.pathExistsSync(configs.serverOutputPath)) {
     fs.removeSync(configs.serverOutputPath);
 }
 
+let serverProccess = null;
 // We attempt to use the default port but if it is busy, we offer the user to
 // run on a different port. `detect()` Promise resolves to the next free port.
 choosePort(HOST, DEFAULT_PORT)
@@ -43,7 +45,20 @@ choosePort(HOST, DEFAULT_PORT)
             // We have not found a port.
             return;
         }
-        serverCompiler.watch(100, () => {});
+        serverCompiler.watch(100, () => {
+            if (serverProccess) {
+                serverProccess.kill('SIGHUP');
+            }
+            serverProccess = spawn(`sh`, ['node', `${configs.serverOutputPath}/${configs.serverOutput}`]);
+
+            serverProccess.stdout.on('data', (data) => {
+                console.log(`stdout: ${data}`);
+            });
+
+            serverProccess.stderr.on('data', (data) => {
+                console.error(`stderr: ${data}`);
+            });
+        });
 
         clientDevServer.listen(port, HOST, () => {
             console.log(`Client dev server running at http://${HOST}:${port}...`);

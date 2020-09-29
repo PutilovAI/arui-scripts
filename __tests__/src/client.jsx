@@ -6,23 +6,25 @@ import { App } from './app';
 const targetElement = document.getElementById('app');
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
+
     ReactDOM.render(
-        <AppContainer>
+        // <AppContainer>
             <App />
-        </AppContainer>,
+        // </AppContainer>,
+        ,
         targetElement
     );
 
-    module.hot.accept('./app', () => {
-        let NextAppAssignments = require('./app').App;
+    // module.hot.accept('./app', () => {
+    //     let NextAppAssignments = require('./app').App;
 
-        ReactDOM.render(
-            <AppContainer>
-                <NextAppAssignments />
-            </AppContainer>,
-            targetElement
-        );
-    });
+    //     ReactDOM.render(
+    //         <AppContainer>
+    //             <NextAppAssignments />
+    //         </AppContainer>,
+    //         targetElement
+    //     );
+    // });
 } else {
     ReactDOM.render(
         <App />,

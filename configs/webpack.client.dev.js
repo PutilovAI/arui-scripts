@@ -1,20 +1,37 @@
 const path = require('path');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
+
 const configs = require('./app-configs');
 const babelConf = require('./babel-client');
 const postcssConf = require('./postcss');
 const applyOverrides = require('./util/apply-overrides');
+const getEntry = require('./util/get-entry');
 // style files regexes
 const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
+
+function getSingleEntry(clientEntry) {
+    return [
+        configs.clientPolyfillsEntry,
+        require.resolve('react-hot-loader/patch'),
+        `${require.resolve('webpack-dev-server/client')}?/`,
+        require.resolve('webpack/hot/dev-server'),
+        // Finally, this is your app's code:
+        ...clientEntry,
+        // We include the app code last so that if there is a runtime error during
+        // initialization, it doesn't blow up the WebpackDevServer client, and
+        // changing JS code would still trigger a refresh.
+    ].filter(Boolean);
+}
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -25,17 +42,7 @@ module.exports = applyOverrides(['webpack', 'webpackClient', 'webpackDev', 'webp
     devtool: 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: [
-        configs.clientPolyfillsEntry,
-        require.resolve('react-hot-loader/patch'),
-        `${require.resolve('webpack-dev-server/client')}?/`,
-        require.resolve('webpack/hot/dev-server'),
-        // Finally, this is your app's code:
-        configs.clientEntry,
-        // We include the app code last so that if there is a runtime error during
-        // initialization, it doesn't blow up the WebpackDevServer client, and
-        // changing JS code would still trigger a refresh.
-    ].filter(Boolean),
+    entry: getEntry(configs.clientEntry, getSingleEntry),
     context: configs.cwd,
     output: {
         // Add /* filename */ comments to generated require()s in the output.
@@ -147,7 +154,12 @@ module.exports = applyOverrides(['webpack', 'webpackClient', 'webpackDev', 'webp
                         test: cssRegex,
                         exclude: cssModuleRegex,
                         use: [
-                            require.resolve('style-loader'),
+                            {
+                                loader: MiniCssExtractPlugin.loader,
+                                options: {
+                                    hmr: true,
+                                },
+                            },
                             {
                                 loader: require.resolve('css-loader'),
                                 options: {
@@ -168,13 +180,18 @@ module.exports = applyOverrides(['webpack', 'webpackClient', 'webpackDev', 'webp
                     {
                         test: cssModuleRegex,
                         use: [
-                            require.resolve('style-loader'),
+                            {
+                                loader: MiniCssExtractPlugin.loader,
+                                options: {
+                                    hmr: true,
+                                },
+                            },
                             {
                                 loader: require.resolve('css-loader'),
                                 options: {
                                     importLoaders: 1,
                                     modules: true,
-                                    getLocalIdent: getCSSModuleLocalIdent
+                                    // getLocalIdent: getCSSModuleLocalIdent
                                 },
                             },
                             {
@@ -233,16 +250,34 @@ module.exports = applyOverrides(['webpack', 'webpackClient', 'webpackDev', 'webp
         //     }
         // ])
         configs.tsconfig !== null && new ForkTsCheckerWebpackPlugin(),
+        new MiniCssExtractPlugin(),
+        new OptimizeCssAssetsPlugin({
+            cssProcessorOptions: {
+                map: {
+                    inline: false,
+                    annotation: true
+                },
+            },
+            cssProcessorPluginOptions: {
+                preset: () => ({
+                    plugins: [
+                        require('postcss-discard-duplicates')
+                    ]
+                })
+            },
+        }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
-    node: {
-        dgram: 'empty',
-        fs: 'empty',
-        net: 'empty',
-        tls: 'empty',
-        child_process: 'empty',
-    },
+    // node: {
+    //     global: {
+    //         dgram: false,
+    //         fs: false,
+    //         net: false,
+    //         tls: false,
+    //         child_process: false,
+    //     }
+    // },
     // Turn off performance hints during development because we don't do any
     // splitting or minification in interest of speed. These warnings become
     // cumbersome.

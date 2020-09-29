@@ -1,4 +1,4 @@
-const { сomponentsTheme } = require('./app-configs');
+const { componentsTheme } = require('./app-configs');
 
 /**
  * Функция для создания конфигурационного файла postcss
@@ -29,6 +29,7 @@ const postcssPlugins = [
     'postcss-strip-units',
     'postcss-calc',
     'postcss-color-function',
+    'postcss-color-mod-function',
     'postcss-nested',
     'autoprefixer',
     'postcss-inherit',
@@ -70,7 +71,10 @@ const postcssPluginsOptions = {
     },
     '@alfalab/postcss-custom-properties': {
         preserve: false,
-        importFrom: сomponentsTheme
+        importFrom: componentsTheme,
+    },
+    'postcss-color-mod-function': {
+        unresolved: 'warn',
     },
 };
 
